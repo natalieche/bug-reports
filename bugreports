@@ -1,0 +1,233 @@
+
+Заголовок: В поле email можно добавить символы не соответствующие стандартам https://www.ups.com
+
+Описание:
+
+Сейчас получается создать пользователей с email содержащими звездочку (*) и прямой слэш (/)
+
+примеры:
+
+"receiverEmail" : "asdsad* .ru"
+
+"receiverEmail" : "asdsad/ .ru"
+
+EXP: выдается ошибка о некорректности email в соответствии с докой в ноушн https://prnt.sc/jLmcRm1797Ry
+ACT: выдается статус 200 ОК
+
+Заголовок: В поле "receiverName" можно добавить цифры когда отправляем put запрос по эндпойнту /public/api/v1/orders/{externalId}
+
+Шаги воспроизведения:
+
+Берем json заказа
+{
+"paymentType" : "CASH",
+"price" : 33.00,
+"paid" : true,
+"paymentDateTime" : "2023-05-13T10:14:33",
+"creationTimestamp" : "2023-01-13T10:14:33",
+"receiptMethod" : {
+"deliveryMethod" : "HOME_DELIVERY",
+"address" : {
+"country" : "Russia",
+"region" : "Len Obl",
+"city" : "St Pets",
+"postCode" : "777777",
+"street" : "bla bla",
+"houseNumber" : "45",
+"officeNumber" : "123"
+},
+"receiverName" : "ALeksei",
+"receiverPhone" : "+79193545678",
+"receiverEmail" : "asdsad@mail.ru",
+"deliveryDate" : "2023-05-14",
+"deliveryStart" : "11:00:00",
+"deliveryEnd" : "20:00:00",
+"deliveryCost" : 2.00
+},
+"orderedProducts" : [
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 11,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+},
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 2,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+}
+]
+}
+
+2. Изменяем поле "receiverName" : "ALeksei" на "receiverName" : "ALik77777"
+
+EXP: выдается ошибка о некорректном имени (согласно доке в ноушн "receiverName" состоит из букв кириллицы или латиницы. Длина имени [4, 201] символов, правда эта валидация прописана для receiptMethod Screenshot )
+ACT: выдается статус 200 ОК
+
+Заголовок: В поле "receiverPhone" можно добавить цифры, в тч отрицательные, а также кириллицу, латиницу, спецсимволы когда отправляем put запрос по эндпойнту /public/api/v1/orders/{externalId}
+
+Шаги воспроизведения:
+
+Берем json заказа
+{
+"paymentType" : "CASH",
+"price" : 33.00,
+"paid" : true,
+"paymentDateTime" : "2023-05-13T10:14:33",
+"creationTimestamp" : "2023-01-13T10:14:33",
+"receiptMethod" : {
+"deliveryMethod" : "HOME_DELIVERY",
+"address" : {
+"country" : "Russia",
+"region" : "Len Obl",
+"city" : "St Pets",
+"postCode" : "777777",
+"street" : "bla bla",
+"houseNumber" : "45",
+"officeNumber" : "123"
+},
+"receiverName" : "ALeksei",
+"receiverPhone" : "+79193545678",
+"receiverEmail" : "asdsad@mail.ru",
+"deliveryDate" : "2023-05-14",
+"deliveryStart" : "11:00:00",
+"deliveryEnd" : "20:00:00",
+"deliveryCost" : 2.00
+},
+"orderedProducts" : [
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 11,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+},
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 2,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+}
+]
+}
+
+2. Изменяем поле "receiverPhone" : "+7919350045678" на "receiverPhone" : "-10000000000"
+
+EXP: выдается ошибка о некорректном формате телефона
+ACT: выдается статус 200 ОК
+
+Изменяем поле "receiverPhone" : "+7919350045678" на "receiverPhone" : "ddddddddddd"
+
+EXP: выдается ошибка о некорректном формате телефона
+ACT: выдается статус 200 ОК
+
+Изменяем поле "receiverPhone" : "+7919350045678" на "receiverPhone" : "ннннннннннн"
+
+EXP: выдается ошибка о некорректном формате телефона
+ACT: выдается статус 200 ОК
+
+Изменяем поле "receiverPhone" : "+7919350045678" на "receiverPhone" : "************" или "receiverPhone" : "++++++++++++"
+
+EXP: выдается ошибка о некорректном формате телефона
+ACT: выдается статус 200 ОК
+
+‌Заголовок: В поле "address" можно удалить все данные когда отправляем put запрос по эндпойнту /public/api/v1/orders/{externalId}
+
+Шаги воспроизведения:
+
+Берем json заказа
+{
+"paymentType" : "CASH",
+"price" : 33.00,
+"paid" : true,
+"paymentDateTime" : "2023-05-13T10:14:33",
+"creationTimestamp" : "2023-01-13T10:14:33",
+"receiptMethod" : {
+"deliveryMethod" : "HOME_DELIVERY",
+"address" : {
+"country" : "Russia",
+"region" : "Len Obl",
+"city" : "St Pets",
+"postCode" : "777777",
+"street" : "bla bla",
+"houseNumber" : "45",
+"officeNumber" : "123"
+},
+"receiverName" : "ALeksei",
+"receiverPhone" : "+79193545678",
+"receiverEmail" : "asdsad@mail.ru",
+"deliveryDate" : "2023-05-14",
+"deliveryStart" : "11:00:00",
+"deliveryEnd" : "20:00:00",
+"deliveryCost" : 2.00
+},
+"orderedProducts" : [
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 11,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+},
+{
+"productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+"amount" : 2,
+"branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+"shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+"name" : "графич планшет",
+"description" : "мощный хороший",
+"price" : 1000.00,
+"photoUrl" : "https://asd.asfds.yandex.ru"
+}
+]
+}
+
+2. Удаляем все данные из "address"
+
+"address" : {
+"country" : "",
+"region" : "",
+"city" : "",
+"postCode" : "",
+"street" : "",
+"houseNumber" : "",
+"officeNumber" : ""
+}
+
+EXP: выдается ошибка о необходимости заполнить поля (кроме индекса) согласно доке в ноушн Screenshot
+ACT: выдается статус 200 ОК
+
+Заголовок: Необходимо поправить валидацию в эндпойнте /public/api/v1/users метод POST в связи с появлением в доке стандарта https://www.ups.com
+
+Description
+
+Сейчас получается создать пользователей с email содержащими звездочку (*) и прямой слэш (/)
+
+Пример:
+
+bit/44@mail.com user id 4dfa4642-847c-4a43-8d16-0d935239466f в базе
+
+bit*44@mail.com user id f0f8ee3c-3a06-463b-a4f3-1594a1a5026a в базе
+
+EXP: выдается ошибка о некорректности email в соответствии с обновленной докой в ноушн Screenshot
+
+ACT: выдается статус 200 ОК
